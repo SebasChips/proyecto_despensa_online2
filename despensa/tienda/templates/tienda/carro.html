@@ -1,6 +1,41 @@
+
 {% extends 'tienda/main.html' %}
+
 {% load static %}
-{% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
-<h3>CARRO</h3>
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="box-element">
+                <a  class="btn btn-outline-dark" href="{% url 'tienda' %}">&#x2190; Seguir comprando</a>
+                <br>
+                <br>
+                <table class="table">
+                    <tr>
+                        <th><h5>Productos: <strong>3</strong></h5></th>
+                        <th><h5>Total:<strong> $42</strong></h5></th>
+                        <th>
+                            <a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Pagar</a>
+                        </th>
+                    </tr>
+                </table>
+            
+		</div>
+
+		<br>
+		<div class="box-element">
+            <div class="cart-row">
+                <div style="flex:2"></div>
+                <div style="flex:2"><strong>Productos</strong></div>
+                <div style="flex:1"><strong>Costo</strong></div>
+                <div style="flex:1"><strong>Cantidad</strong></div>
+                <div style="flex:1"><strong>Total</strong></div>
+            </div>
+
+            </div>
+
+		</div>
+	</div>
+</div>
+{% endblock content %}

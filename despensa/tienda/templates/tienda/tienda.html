@@ -1,40 +1,65 @@
 {% extends 'tienda/main.html' %}
 {% load static %}
-{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
-<html>
-<head>
 <title>tienda</title>
-<h3>TIENDA</h3>
 
-<div class="row">
-	<div class="col-lg-4">
-        <h3>JHFLJHASFAKSF</h3>
-        <img class="thumbnail" src="{% static 'placeholder.png' %}">
-		<div class="box-element product">
-        
-            
+{% block content %}
+	<div class="row">
+		<div class="col-md-3">
+			<img class="thumbnail" src="{% static 'images/pan bimbo.png' %}">
+			<div class="box-element product">
+				<h6><strong>Pan</strong></h6>
+			<hr>
+
+			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
+			<a class="btn btn-outline-success" href="#">Ver</a>
+			<h4 style="display: inline-block; float: right"><strong>$75</strong></h4>
+			</div>
 
 		</div>
-	</div>
+		<div class="col-md-3">
+			<img class="thumbnail" src="{% static 'images/leche alpura.png' %}">
+			<div class="box-element product">
+				<h6><strong>Leche</strong></h6>
 
-	<div class="col-lg-4">
-		<div class="box-element product">
+
+			<hr>
 			
+			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
+			<a class="btn btn-outline-success" href="#">Ver</a>
+			<h4 style="display: inline-block; float: right"><strong>$200</strong></h4>
+			</div>
+
+		</div>
+		<div class="col-md-3">
+			<img class="thumbnail" src="{% static 'images/scooby galletas.png' %}">
+			<div class="box-element product">
+				<h6><strong>Scooby galletas</strong></h6>
+
+
+			<hr>
+			
+			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
+			<a class="btn btn-outline-success" href="#">Ver</a>
+			<h4 style="display: inline-block; float: right"><strong>$60</strong></h4>
+			</div>
+
+		</div>
+
+		<div class="col-md-3">
+			<img class="thumbnail" src="{% static 'images/scooby galletas.png' %}">
+			<div class="box-element product">
+				<h6><strong>Algo más</strong></h6>
+			<hr>
+			
+			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
+			<a class="btn btn-outline-success" href="#">Ver</a>
+			<h4 style="display: inline-block; float: right"><strong>$20</strong></h4>
+			</div>
 		</div>
 	</div>
-
-	<div class="col-lg-4">
-		<div class="box-element product">
-
-		</div>
-	</div>
-    {% endblock content %}
-</div>
-</head>
-<body>
-</body>
-</html>
+{% endblock content %}
 
 
 
