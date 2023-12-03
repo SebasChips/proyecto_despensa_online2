@@ -44,6 +44,19 @@ class Pedido(models.Model):
         return str(self.id)
     
     @property 
+
+    def shipping (self):
+       shipping = False
+       ordenproducto = self.ordenproducto_set.all()
+       for i in ordenproducto:
+          if i.producto.digital == False:
+             shipping = True
+       return shipping
+
+   
+ 
+
+
     
        
     
@@ -86,6 +99,7 @@ class Lugar_envio (models.Model):
 
 
    def __str__(self):
+
       return self.direccion
 
 

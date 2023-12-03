@@ -18,7 +18,7 @@ def tienda(request):
         caritems = pedido.get_carro_productos
     else:
         items = []
-        pedido = {'get_carro_total':0, 'get_carro_productos':0}
+        pedido = {'get_carro_total':0, 'get_carro_productos':0, 'shipping':False}
         caritems = pedido ['get_carro_productos']
 
     products = Producto.objects.all()
@@ -36,7 +36,7 @@ def carro(request):
         caritems = pedido.get_carro_productos
     else:
         items = []
-        pedido = {'get_carro_total':0, 'get_carro_productos':0 }
+        pedido = {'get_carro_total':0, 'get_carro_productos':0 , 'shipping':False}
         caritems = pedido ['get_carro_productos']
 
     context = {'items': items , 'order': pedido , 'caritems': caritems}
@@ -44,82 +44,8 @@ def carro(request):
     return render(request, 'tienda/carro.html', context)
 
 
-
-#def carro(request):
-    items = []
-
-    if request.user.is_authenticated:
-        # Usa getattr para obtener el cliente o establecer None si no existe
-        customer = getattr(request.user, 'cliente', None)
-        
-        if customer:
-            order, created = Pedido.objects.get_or_create(usuario=customer, completo=False)
-            items = order.orden_producto_set.all()
-
-    context = {'items': items}
-    return render(request, 'tienda/carro.html', context)
-
-
-
-
-
-
 #from django.shortcuts import get_object_or_404
 
-
-#def carro(request):
-
-   
-
-    if request.user.is_authenticated:
-
-        cliente = getattr(request.user, 'cliente', None)
-        
-        if cliente:
-            pedido, created = Pedido.objects.get_or_create(usuario=cliente, completo=False)
-            items = pedido.orden_producto_set.all()
-      
-        items = []
-
-        context = {'items': items}
-        return render(request, 'tienda/carro.html', context)
-
-#def carro(request):
-    if request.user.is_authenticated:
-        # Obtener el cliente asociado al usuario autenticado
-        cliente_actual = cliente.objects.get(usuario=request.user)
-
-        # Obtener o crear un pedido para el cliente
-        order, created = Pedido.objects.get_or_create(usuario=customer, completo=False)
-
-        # Obtener los productos en el pedido
-        items = pedido.orden_producto_set.all()
-    else:
-        items = []
-
-    context = {'items': items}
-    return render(request, 'tienda/carro.html', context)
-
-#def carro(request):
-    items = []
-
-    if request.user.is_authenticated:
-        cliente = getattr(request.user, 'cliente', None)
-        
-        if cliente:
-            try:
-                pedido, created = Pedido.objects.get_or_create(usuario=cliente, completo=False)
-                items = pedido.orden_producto_set.all()
-            except Pedido.DoesNotExist:
-                # Hacer algo si el pedido no existe (opcional)
-                pass
-            except Exception as e:
-                # Manejar la excepción de manera adecuada
-                print(f"Error al obtener el pedido: {e}")
-
-    context = {'items': items}
-    return render(request, 'tienda/carro.html', context)
-     
 
 def checkout(request):
 
@@ -131,7 +57,7 @@ def checkout(request):
         caritems = pedido.get_carro_productos
     else:
         items = []
-        pedido = {'get_carro_total':0, 'get_carro_productos':0}
+        pedido = {'get_carro_total':0, 'get_carro_productos':0 , 'shipping':False}
         caritems = pedido ['get_carro_productos']
         
     context = {'items': items , 'order': pedido , 'caritems': caritems}
