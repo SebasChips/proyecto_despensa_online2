@@ -6,60 +6,17 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-md-3">
-			<img class="thumbnail" src="{% static 'images/pan bimbo.png' %}">
+        {% for producto in products %}
+		<div class="col-lg-4">
+			<img class="thumbnail" src="{{producto.imageURL}}">
 			<div class="box-element product">
-				<h6><strong>Pan</strong></h6>
-			<hr>
-
-			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
-			<a class="btn btn-outline-success" href="#">Ver</a>
-			<h4 style="display: inline-block; float: right"><strong>$75</strong></h4>
-			</div>
-
-		</div>
-		<div class="col-md-3">
-			<img class="thumbnail" src="{% static 'images/leche alpura.png' %}">
-			<div class="box-element product">
-				<h6><strong>Leche</strong></h6>
-
-
-			<hr>
-			
-			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
-			<a class="btn btn-outline-success" href="#">Ver</a>
-			<h4 style="display: inline-block; float: right"><strong>$200</strong></h4>
-			</div>
-
-		</div>
-		<div class="col-md-3">
-			<img class="thumbnail" src="{% static 'images/scooby galletas.png' %}">
-			<div class="box-element product">
-				<h6><strong>Scooby galletas</strong></h6>
-
-
-			<hr>
-			
-			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
-			<a class="btn btn-outline-success" href="#">Ver</a>
-			<h4 style="display: inline-block; float: right"><strong>$60</strong></h4>
-			</div>
-
-		</div>
-
-		<div class="col-md-3">
-			<img class="thumbnail" src="{% static 'images/scooby galletas.png' %}">
-			<div class="box-element product">
-				<h6><strong>Algo más</strong></h6>
-			<hr>
-			
-			<button  class="btn btn-outline-secondary add-btn">Añadir al carrito</button>
-			<a class="btn btn-outline-success" href="#">Ver</a>
-			<h4 style="display: inline-block; float: right"><strong>$20</strong></h4>
+				<h6><strong>{{producto.nombre}}</strong></h6>
+				<hr>
+				<button data-product={{producto.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Añadir al carrito</button>
+				<a class="btn btn-outline-success" href="#">Ver</a>
+				<h4 style="display: inline-block; float: right"><strong>${{producto.precio|floatformat:2}}</strong></h4>
 			</div>
 		</div>
+        {% endfor %}
 	</div>
 {% endblock content %}
-
-
-
