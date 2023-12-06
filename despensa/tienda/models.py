@@ -17,7 +17,7 @@ class cliente(models.Model):
 class Producto(models.Model):
 
     nombre = models.CharField(max_length=255, null=True)
-    precio = models.FloatField()
+    precio = models.DecimalField(max_digits=7, decimal_places=2)
     digital = models.BooleanField(default=False, null=True, blank=False )
     image = models.ImageField(null=True, blank=True)
 
@@ -50,7 +50,7 @@ class Pedido(models.Model):
        ordenproducto = self.ordenproducto_set.all()
        for i in ordenproducto:
           if i.producto.digital == False:
-             shipping = True
+            shipping = True
        return shipping
 
    

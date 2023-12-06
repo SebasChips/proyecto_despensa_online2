@@ -6,7 +6,7 @@ from .models import Producto
 from .models import Lugar_envio
 from django.http import JsonResponse
 import json
-
+import datetime
 
 def tienda(request):
 
@@ -45,6 +45,7 @@ def carro(request):
 
 
 #from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 
 def checkout(request):
@@ -88,4 +89,36 @@ def updateItem (request):
 
     if ordenproducto.cantidad <= 0:
         ordenproducto.delete()
-    return JsonResponse('Item was added', safe=False)
+    return JsonResponse('Item fue añadido', safe=False)
+
+
+@csrf_exempt
+
+def proccessOrder(request):
+    id_transaccion = datetime.datetime.now().timestamp()
+    data =json.loads(request.body)
+
+    if request.user.is_authenticated:
+        costumer =request.user.costumer
+        pedido, created = Pedido.objects.get_or_create(usuario=cliente, completo=False)
+        total = float(data['form']['total'])
+        pedido.id_transaccion = id_transaccion
+
+        if total == orden_producto.get_cart_total:
+            orden_producto.complete=True
+        orden_producto.save()
+
+        if orden_producto.shipping == True:
+            Lugar_envio.objects.create(
+                custumer = cliente,
+                order =orden_producto,
+                address=data ['shipping']['address'],
+                city=data ['shipping']['city'],
+                state=data ['shipping']['state'],
+                zipcode=data ['shipping']['zipcode'],
+
+            )
+        
+    else:
+        print ('El usuario no inicio sesión...')
+    return JsonResponse('¡Pago completado!', safe =False)
