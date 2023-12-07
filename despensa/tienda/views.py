@@ -1,25 +1,17 @@
 from django.shortcuts import render
-from .models import cliente
-from .models import Pedido
-from .models import orden_producto
-from .models import Producto
-from .models import Lugar_envio
 from django.http import JsonResponse
 import json
 import datetime
 
+from .models  import *
+from .utils import *
+
 def tienda(request):
 
-    if request.user.is_authenticated:
-        # Accede directamente al campo "usuario"
-        customer = request.user.cliente
-        pedido, created = Pedido.objects.get_or_create(usuario=customer, completo=False)
-        items = pedido.orden_producto_set.all()
-        caritems = pedido.get_carro_productos
-    else:
-        items = []
-        pedido = {'get_carro_total':0, 'get_carro_productos':0, 'shipping':False}
-        caritems = pedido ['get_carro_productos']
+    data = cartData(request)
+    caritems = data['caritems']
+    pedido = data['pedido']
+    items = data['items']
 
     products = Producto.objects.all()
     context = {'products': products, 'caritems': caritems}
@@ -28,16 +20,46 @@ def tienda(request):
 
 def carro(request):
 
-    if request.user.is_authenticated:
-        # Accede directamente al campo "usuario"
-        customer = request.user.cliente
-        pedido, created = Pedido.objects.get_or_create(usuario=customer, completo=False)
-        items = pedido.orden_producto_set.all()
-        caritems = pedido.get_carro_productos
-    else:
-        items = []
-        pedido = {'get_carro_total':0, 'get_carro_productos':0 , 'shipping':False}
-        caritems = pedido ['get_carro_productos']
+    data = cartData(request)
+    caritems = data['caritems']
+    pedido = data['pedido']
+    items = data['items']
+
+
+    try:
+            carro= json.loads(request.COOKIES['carro'])
+    except:
+            carro = {}
+    print ( 'Cart', carro)
+    items = []
+    pedido = {'get_carro_total':0, 'get_carro_productos':0 , 'shipping':False}
+    caritems = pedido ['get_carro_productos']
+
+    for i in carro:
+            try:
+                caritems += carro[i]["quantity"]
+                product =  Producto.objects.get(id=1)
+                total = (product.precio * carro[i]["quantity"])
+
+                pedido['get_cart_total'] +=total
+                pedido['get_cart_total'] +=carro[i]["quantity"]
+
+                item = {
+                    'product':{
+                        'id': product.id,
+                        'name': product.name,
+                        'price': product.price,
+                        'imageURL': product.imageURL,
+                    },
+                    'quantity': carro[i]["quantiy"],
+                    'get_total': total,
+                }
+                items.append(item)
+
+                if product.digital == False:
+                    pedido['shipping'] = True
+            except:
+                pass
 
     context = {'items': items , 'order': pedido , 'caritems': caritems}
 
@@ -49,17 +71,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def checkout(request):
-
-    if request.user.is_authenticated:
-        # Accede directamente al campo "usuario"
-        customer = request.user.cliente
-        pedido, created = Pedido.objects.get_or_create(usuario=customer, completo=False)
-        items = pedido.orden_producto_set.all()
-        caritems = pedido.get_carro_productos
-    else:
-        items = []
-        pedido = {'get_carro_total':0, 'get_carro_productos':0 , 'shipping':False}
-        caritems = pedido ['get_carro_productos']
+    
+    data = cartData(request)
+    caritems = data['caritems']
+    pedido = data['pedido']
+    items = data['items']
         
     context = {'items': items , 'order': pedido , 'caritems': caritems}
     return render (request, 'tienda/checkout.html', context)
@@ -73,9 +89,9 @@ def updateItem (request):
     print('action:', action)
     print('productId:', productId)
 
-    customer = request.user.cliente
+    cliente = request.user.cliente
     producto = Producto.objects.get(id = productId)
-    pedido, created = Pedido.objects.get_or_create(usuario=customer, completo=False)
+    pedido, created = Pedido.objects.get_or_create(usuario=cliente, completo=False)
 
     ordenproducto, created = orden_producto.objects.get_or_create( orden = pedido , producto = producto)
 
@@ -101,24 +117,28 @@ def proccessOrder(request):
     if request.user.is_authenticated:
         costumer =request.user.costumer
         pedido, created = Pedido.objects.get_or_create(usuario=cliente, completo=False)
-        total = float(data['form']['total'])
-        pedido.id_transaccion = id_transaccion
+        
 
-        if total == orden_producto.get_cart_total:
+        
+    else:
+        cliente, pedido = guestOrder(request, data)                          
+    
+    total = float(data['form']['total'])
+    pedido.id_transaccion = id_transaccion
+
+    if total == orden_producto.get_cart_total:
             orden_producto.complete=True
-        orden_producto.save()
+    orden_producto.save()
 
-        if orden_producto.shipping == True:
+    if pedido.shipping == True:
             Lugar_envio.objects.create(
-                custumer = cliente,
-                order =orden_producto,
+                cliente = cliente,
+                pedido =orden_producto,
                 address=data ['shipping']['address'],
                 city=data ['shipping']['city'],
                 state=data ['shipping']['state'],
                 zipcode=data ['shipping']['zipcode'],
 
             )
-        
-    else:
-        print ('El usuario no inicio sesión...')
+    
     return JsonResponse('¡Pago completado!', safe =False)
